@@ -1,7 +1,12 @@
 package application;
 
+import chess.ChessMatch;
+import util.ClearScreen;
+
 public class App {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        ClearScreen.cls();
+        ChessMatch chessMatch = new ChessMatch();
+        UI.printBoard(chessMatch.getPieces());
     }
 }
