@@ -1,8 +1,10 @@
 package chess;
 
 import chess.enums.Color;
-
+import chess.exception.ChessException;
 import boardgame.Board;
+import boardgame.Piece;
+import boardgame.Position;
 import chess.pieces.King;
 import chess.pieces.Rook;
 
@@ -24,33 +26,51 @@ public class ChessMatch {
         return matPiece;
     }
 
-    private void initialSetup() {
-        // Teste com peças BRANCAS (vão aparecer em BRANCO - ANSI_WHITE)
-        // Posicionando reis e torres brancas
-        placeNewPiece('e', 1, new King(board, Color.WHITE)); // Rei branco em e1
+    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
+        Position source = sourcePosition.toPosition();
+        Position target = targetPosition.toPosition();
+        validateSourcePosition(source);
+        Piece capturedPiece = makeMove(source, target);
+        return (ChessPiece) capturedPiece;
+    }
 
-        placeNewPiece('a', 1, new Rook(board, Color.WHITE)); // Torres brancas
-        placeNewPiece('h', 1, new Rook(board, Color.WHITE));
+    private Piece makeMove(Position source, Position target) {
+        Piece piece = board.removePiece(source);
+        Piece capturedPiece = board.removePiece(target);
+        board.placePiece(piece, target);
+        return capturedPiece;
+    }
 
-        // Algumas torres extras para testar
-        placeNewPiece('c', 1, new Rook(board, Color.WHITE)); // Torre extra em c1
-        placeNewPiece('f', 1, new Rook(board, Color.WHITE)); // Torre extra em f1
-
-        // Teste com peças PRETAS (vão aparecer em AMARELO - ANSI_YELLOW)
-        placeNewPiece('e', 8, new King(board, Color.BLACK)); // Rei preto em e8
-
-        placeNewPiece('a', 8, new Rook(board, Color.BLACK)); // Torres pretas
-        placeNewPiece('h', 8, new Rook(board, Color.BLACK));
-
-        placeNewPiece('c', 8, new Rook(board, Color.BLACK)); // Torres extras
-        placeNewPiece('f', 8, new Rook(board, Color.BLACK));
-
-        // Colocar algumas peças no meio do tabuleiro para testar
-        placeNewPiece('d', 4, new Rook(board, Color.WHITE)); // Torre branca no centro
-        placeNewPiece('e', 5, new Rook(board, Color.BLACK)); // Torre preta no centro
+    private void validateSourcePosition(Position position) {
+        if(!board.thereIsAPiece(position)) {
+            throw new ChessException("There is no piece on source position!");
+        }
     }
 
     private void placeNewPiece(char column, int row, ChessPiece piece) {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
+    }
+
+    private void initialSetup() {
+        // peças brancas
+        placeNewPiece('e', 1, new King(board, Color.WHITE));
+
+        placeNewPiece('a', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('h', 1, new Rook(board, Color.WHITE));
+
+        placeNewPiece('c', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('f', 1, new Rook(board, Color.WHITE));
+
+        // peças amarelas(substuindo as pretas)
+        placeNewPiece('e', 8, new King(board, Color.BLACK));
+
+        placeNewPiece('a', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('h', 8, new Rook(board, Color.BLACK));
+
+        placeNewPiece('c', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('f', 8, new Rook(board, Color.BLACK));
+
+        placeNewPiece('d', 4, new Rook(board, Color.WHITE));
+        placeNewPiece('e', 5, new Rook(board, Color.BLACK));
     }
 }
