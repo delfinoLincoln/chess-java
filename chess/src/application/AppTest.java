@@ -41,6 +41,11 @@ public class AppTest {
                 if (capturedPiece != null) {
                     captured.add(capturedPiece);
                 }
+                if (chessMatch.getPromoted() != null) {
+                    System.out.print("Enter piece for promotion(B/N/R/Q)? ");
+                    String type = sc.nextLine().toUpperCase();
+                    chessMatch.replacePromotedPiece(type);
+                }
             }
             catch(ChessException e) {
                 System.out.println("Error: " + e.getMessage() + " Try again!");
